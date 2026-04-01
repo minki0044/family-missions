@@ -16,12 +16,12 @@ const DKR = ['일','월','화','수','목','금','토']
 
 // ── 가족 설정 (어드민이 관리) ──
 const FAMILY_CONFIG: Record<string, { name: string; em: string; col: string; bg: string }> = {
-  dad:    { name: '아빠', em: '👨', col: '#FF8C42', bg: '#FFF4EC' },
-  mom:    { name: '엄마', em: '👩', col: '#E8637A', bg: '#FFF0F2' },
-  iheon:  { name: '이헌', em: '🧒', col: '#5B8CFF', bg: '#EFF3FF' },
-  jiheon: { name: '지헌', em: '👦', col: '#2BB5A0', bg: '#EBF9F7' },
+  '아빠': { name: '아빠', em: '👨', col: '#FF8C42', bg: '#FFF4EC' },
+  '엄마': { name: '엄마', em: '👩', col: '#E8637A', bg: '#FFF0F2' },
+  '이헌': { name: '이헌', em: '🧒', col: '#5B8CFF', bg: '#EFF3FF' },
+  '지헌': { name: '지헌', em: '👦', col: '#2BB5A0', bg: '#EBF9F7' },
 }
-const DEFAULT_ORDER = ['dad', 'mom', 'iheon', 'jiheon']
+const DEFAULT_ORDER = ['아빠', '엄마', '이헌', '지헌']
 
 // ── 통계 계산 ──
 function calcStats(m: Mission, ciSet: Set<string>) {
@@ -346,12 +346,12 @@ export default function DashboardPage() {
     return p?.id === myId
   }
 
-  const myConfig = FAMILY_CONFIG[myRole || 'dad'] || FAMILY_CONFIG['dad']
+  const myConfig = FAMILY_CONFIG[myRole || '아빠'] || FAMILY_CONFIG['아빠']
 
   /* ── STATS ── */
   if (screen === 'stats' && stM) {
     const stProfile = profiles.find(p => p.id === stM.user_id)
-    const stRole = stProfile?.family_role || 'dad'
+    const stRole = stProfile?.family_role || '아빠'
     const stCfg = FAMILY_CONFIG[stRole] || myConfig
     const st = calcStats(stM, ciByMission(stM.id))
     return (
@@ -399,7 +399,7 @@ export default function DashboardPage() {
   /* ── DETAIL ── */
   if (screen === 'detail' && detM) {
     const detProfile = profiles.find(p => p.id === detM.user_id)
-    const detRole = detProfile?.family_role || 'dad'
+    const detRole = detProfile?.family_role || '아빠'
     const detCfg = FAMILY_CONFIG[detRole] || myConfig
     const detMs = getMissions(detRole)
     const isOwnDetail = detM.user_id === myId
@@ -563,7 +563,7 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-      {showAdd && <AddModal onAdd={addMission} onClose={() => { setShowAdd(false); setAddFor(null) }} col={FAMILY_CONFIG[myRole || 'dad']?.col || '#FF8C42'} />}
+      {showAdd && <AddModal onAdd={addMission} onClose={() => { setShowAdd(false); setAddFor(null) }} col={FAMILY_CONFIG[myRole || '아빠']?.col || '#FF8C42'} />}
     </div>
   )
 }
