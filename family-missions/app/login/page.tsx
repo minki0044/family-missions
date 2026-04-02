@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase'
 
 
 
@@ -16,7 +17,17 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     setLoading(true)
-    window.location.href = '/auth/login'
+    const sb = createClient()
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    if (error) {
+      console.error('Login error:', error)
+      setLoading(false)
+    }
   }
 
   return (
