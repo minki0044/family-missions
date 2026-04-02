@@ -1,29 +1,17 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
     const { searchParams, origin } = new URL(request.url)
-    const code = searchParams.get('code')
+      const code = searchParams.get('code')
 
-  if (code) {
-        const supabaseResponse = NextResponse.redirect(`${origin}/dashboard`)
+        if (code) {
+            // createBrowserClient가 PKCE code verifier를 document.cookie에 저장함.
+                // server-side Route Handler에서는 해당 쿠키를 읽을 수 없으므로
+                    // client-side에서 exchange하는 /exchange 페이지로 리다이렉트.
+                        return NextResponse.redirect(`${origin}/exchange?code=${encodeURIComponent(code)}`)
+                          }
 
-      const supabase = createServerClient(
-              process.env.NEXT_PUBLIC_SUPABASE_URL!,
-              process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-                  cookies: {
-                              getAll() { return request.cookies.getAll() },
-                              setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-                                            cookiesToSet.forEach(({ name, value, options }) =>
-                                                            supabaseResponse.cookies.set(name, value, options)
-                                                                             )
-                              },
-                  },
-        }
-            )
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (!error) return supabaseResponse
-  }
-    return NextResponse.redirect(`${origin}/login?error=auth_failed`)
+                            return NextResponse.redirect(`${origin}/login?error=auth_failed`)
+                            }
+
 }
