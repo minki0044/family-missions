@@ -1,18 +1,18 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+
 import { createClient } from '@/lib/supabase'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const searchParams = useSearchParams()
+  
 
   useEffect(() => {
-    if (searchParams.get('error') === 'auth_failed') {
+    if (new URLSearchParams(window.location.search).get('error') === 'auth_failed') {
       setError('로그인에 실패했습니다. 등록된 가족 계정으로 다시 시도해주세요.')
     }
-  }, [searchParams])
+  }, [])
 
   const handleLogin = async () => {
     setLoading(true)
